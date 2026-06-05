@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../../.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-common/0.3.5/5de895137aa0478675b6ecf7602d9652b05dc37e/mixinextras-common-0.3.5.jar" />
+        </processorPath>
+        <module name="SuperAccessTransformer.common.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="21" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="SuperAccessTransformer.fabric" options="-AoutRefMapFile=D:\VKN\SuperAccessTransformer\fabric\build\classes\java\main\sat.refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\VKN\SuperAccessTransformer\fabric\build\loom-cache\mixin-map-loom.mappings.1_21.layered+hash.1010942874-v2.main.tiny -AinMapFileNamedIntermediary=D:\.gradle\caches\fabric-loom\1.21\loom.mappings.1_21.layered+hash.1010942874-v2\mappings.tiny" />
+      <module name="SuperAccessTransformer.fabric.main" options="-AoutRefMapFile=D:\VKN\SuperAccessTransformer\fabric\build\classes\java\main\sat.refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\VKN\SuperAccessTransformer\fabric\build\loom-cache\mixin-map-loom.mappings.1_21.layered+hash.1010942874-v2.main.tiny -AinMapFileNamedIntermediary=D:\.gradle\caches\fabric-loom\1.21\loom.mappings.1_21.layered+hash.1010942874-v2\mappings.tiny" />
+      <module name="SuperAccessTransformer.fabric.test" options="-AoutRefMapFile=D:\VKN\SuperAccessTransformer\fabric\build\classes\java\test\test-sat.refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\VKN\SuperAccessTransformer\fabric\build\loom-cache\mixin-map-loom.mappings.1_21.layered+hash.1010942874-v2.test.tiny -AinMapFileNamedIntermediary=D:\.gradle\caches\fabric-loom\1.21\loom.mappings.1_21.layered+hash.1010942874-v2\mappings.tiny" />
+    </option>
+  </component>
+</project>
