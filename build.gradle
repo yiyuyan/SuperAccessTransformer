@@ -8,6 +8,11 @@ architectury {
     neoForge()
 }
 
+superAccessTransformer {
+    packageName("net.neoforged.neoforge.common.util.".replace(".","/"))
+    packageName("net.neoforged.neoforge.network.registration.".replace(".","/"))
+}
+
 configurations {
     common {
         canBeResolved = true
