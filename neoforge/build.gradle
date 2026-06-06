@@ -1,12 +1,15 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    //id 'sat-plugin' version '1.0'
+    id 'sat-plugin' version '1.00'
 }
 base {
     archivesBaseName = mod_name
 }
 
+superAccessTransformer {
+    //skip()
+}
 repositories {
     mavenLocal()
 }

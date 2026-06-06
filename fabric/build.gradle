@@ -1,7 +1,7 @@
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
-    id 'sat-plugin' version '1.0'
+    id 'sat-plugin' version '1.000'
 }
 base {
     archivesBaseName = mod_name
