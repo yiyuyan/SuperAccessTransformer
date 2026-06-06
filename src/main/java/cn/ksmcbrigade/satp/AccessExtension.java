@@ -1,22 +1,28 @@
 package cn.ksmcbrigade.satp;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.gradle.api.provider.ListProperty;
 
-public class AccessExtension {
-    private List<String> packages = new ArrayList<>();
+public abstract class AccessExtension {
+
+    public abstract ListProperty<String> getPackages();
+
+    public abstract ListProperty<String> getSkipMethods();
 
     public AccessExtension() {
-        packages.add("net/minecraft/");
-        packages.add("com/mojang/");
-    }
+        getPackages().add("net/minecraft/");
+        getPackages().add("com/mojang/");
 
-    public List<String> getPackages() {
-        return packages;
+        //for fabric
+        getSkipMethods().add("WitherBoss;rotlerp");
+        getSkipMethods().add("Mob;rotlerp");
     }
 
     public void packageName(String pkg) {
         if (!pkg.endsWith("/")) pkg += "/";
-        packages.add(pkg);
+        getPackages().add(pkg);
+    }
+
+    public void skip(String rule) {
+        getSkipMethods().add(rule);
     }
 }

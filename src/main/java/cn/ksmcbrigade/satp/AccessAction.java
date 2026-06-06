@@ -8,6 +8,7 @@ import org.gradle.api.file.FileSystemLocation;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Input;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -26,13 +27,16 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
     public interface Params extends TransformParameters {
         @Input
         ListProperty<String> getTargetPackages();
+
+        @Input
+        ListProperty<String> getSkipMethods();
     }
 
     @InputArtifact
     public abstract Provider<FileSystemLocation> getInputArtifact();
 
     @Override
-    public void transform(TransformOutputs outputs) {
+    public void transform(@NotNull TransformOutputs outputs) {
         File inputJar = getInputArtifact().get().getAsFile();
         List<String> packages = getParameters().getTargetPackages().get();
 
@@ -68,7 +72,7 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
 
                 if (name.endsWith(".class") && isTargetPackage(name, packages)) {
                     try {
-                        data = transformClass(data);
+                        data = transformClass(data, getParameters().getSkipMethods().get());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -92,7 +96,7 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
         return false;
     }
 
-    private byte[] transformClass(byte[] original) {
+    private byte[] transformClass(byte[] original, List<String> skipRules) {
         ClassReader cr = new ClassReader(original);
         ClassNode cn = new ClassNode();
         cr.accept(cn, 0);
@@ -138,6 +142,10 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
 
         for (MethodNode mn : cn.methods) {
             if ("<clinit>".equals(mn.name) || mn.name.startsWith("handler$")) continue;
+
+            if("rotlerp".equals(mn.name) && (cn.name.endsWith("Mob") || cn.name.endsWith("WitherBoss"))) continue;
+            if (shouldSkip(skipRules, cn.name, mn.name)) continue;
+
             boolean mChanged = false;
             if ((mn.access & Opcodes.ACC_PRIVATE) != 0) {
                 mn.access = (mn.access & ~Opcodes.ACC_PRIVATE) | Opcodes.ACC_PUBLIC;
@@ -161,5 +169,18 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
         ClassWriter cw = new ClassWriter(0);
         cn.accept(cw);
         return cw.toByteArray();
+    }
+
+    private boolean shouldSkip(List<String> rules, String simpleClassName, String methodName) {
+        for (String rule : rules) {
+            if (rule.trim().isEmpty()) continue;
+            String[] parts = rule.trim().split(";");
+            if (parts.length == 2) {
+                if (simpleClassName.endsWith(parts[0]) && parts[1].equals(methodName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
