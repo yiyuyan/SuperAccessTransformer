@@ -4,7 +4,7 @@ plugins {
     id 'sat-plugin' version '1.00'
 }
 base {
-    archivesBaseName = mod_name
+    archivesBaseName = mod_name+"-NeoForge"
 }
 
 superAccessTransformer {
