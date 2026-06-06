@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+group = 'cn.ksmcbrigade.satp'
+version = '1.0'
+
+base{
+    archivesName = "SuperAccessTransformerPlugin"
+}
+
+gradlePlugin {
+    plugins {
+        SuperAccessTransformerPlugin {
+            id = 'sat-plugin'
+            implementationClass = 'cn.ksmcbrigade.satp.AccessPlugin'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Sponge'
+        url = uri('https://repo.spongepowered.org/repository/maven-public')
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.ow2.asm:asm:9.6'
+    implementation 'org.ow2.asm:asm-tree:9.6'
+}
+
+test {
+    useJUnitPlatform()
+}
