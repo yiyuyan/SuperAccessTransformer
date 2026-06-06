@@ -1,0 +1,32 @@
+modLoader = "javafml"
+loaderVersion = "[2,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "testsat"
+version = "${version}"
+displayName = "testSAT"
+authors = "commonplace(KSmc_brigade)"
+description = '''
+To access all the classes,methods and fields through JavaAgent.
+'''
+#logoFile = ""
+
+[[dependencies.testsat]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.testsat]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "BOTH"
+
+
+[[mixins]]
+config = "testsat.mixins.json"
