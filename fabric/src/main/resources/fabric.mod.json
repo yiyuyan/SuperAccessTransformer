@@ -17,6 +17,9 @@
   "entrypoints": {
     "preLaunch": [
       "cn.ksmcbrigade.sat.SATMod"
+    ],
+    "main": [
+      "cn.ksmcbrigade.sat.SATTest"
     ]
   },
   "mixins": [

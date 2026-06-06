@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/SuperAccessTransformer.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/SuperAccessTransformer.common.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/SuperAccessTransformer.fabric.main.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/SuperAccessTransformer.fabric.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fabric/SuperAccessTransformer.fabric.test.iml" filepath="$PROJECT_DIR$/.idea/modules/fabric/SuperAccessTransformer.fabric.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/forge/SuperAccessTransformer.forge.iml" filepath="$PROJECT_DIR$/.idea/modules/forge/SuperAccessTransformer.forge.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/neoforge/SuperAccessTransformer.neoforge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/neoforge/SuperAccessTransformer.neoforge.main.iml" />
     </modules>
   </component>

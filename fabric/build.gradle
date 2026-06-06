@@ -1,9 +1,13 @@
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
+    id 'sat-plugin' version '1.0'
 }
 base {
     archivesBaseName = mod_name
+}
+repositories {
+    mavenLocal()
 }
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"

@@ -1,6 +1,11 @@
 plugins {
     id 'multiloader-common'
     id 'net.neoforged.moddev'
+    //id 'sat-plugin' version '1.0'
+}
+
+repositories{
+    mavenLocal()
 }
 
 neoForge {
@@ -22,11 +27,11 @@ dependencies {
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
-    implementation("org.ow2.asm:asm:9.6")
-    implementation("org.ow2.asm:asm-commons:9.6")
-    implementation("org.ow2.asm:asm-tree:9.6")
-    implementation("org.ow2.asm:asm-util:9.6")
-    implementation("org.ow2.asm:asm-analysis:9.6")
+    compileOnly("org.ow2.asm:asm:9.6")
+    compileOnly("org.ow2.asm:asm-commons:9.6")
+    compileOnly("org.ow2.asm:asm-tree:9.6")
+    compileOnly("org.ow2.asm:asm-util:9.6")
+    compileOnly("org.ow2.asm:asm-analysis:9.6")
 }
 
 configurations {
