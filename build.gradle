@@ -1,10 +1,10 @@
 plugins {
     id 'java'
     id 'java-gradle-plugin'
-    id 'maven-publish'
+    id "com.vanniktech.maven.publish" version "0.28.0"
 }
 
-group = 'cn.ksmcbrigade.satp'
+group = 'io.github.yiyuyan'
 version = '1.000'
 
 base{
@@ -14,7 +14,7 @@ base{
 gradlePlugin {
     plugins {
         SuperAccessTransformerPlugin {
-            id = 'sat-plugin'
+            id = 'io.github.yiyuyan.sat-plugin'
             implementationClass = 'cn.ksmcbrigade.satp.AccessPlugin'
         }
     }
@@ -22,10 +22,6 @@ gradlePlugin {
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'Sponge'
-        url = uri('https://repo.spongepowered.org/repository/maven-public')
-    }
 }
 
 dependencies {
@@ -35,6 +31,41 @@ dependencies {
 
     implementation 'org.ow2.asm:asm:9.6'
     implementation 'org.ow2.asm:asm-tree:9.6'
+}
+
+import com.vanniktech.maven.publish.SonatypeHost
+
+mavenPublishing {
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL,false)
+
+    signAllPublications()
+
+    pom{
+        name = "SuperAccessTransformerPlugin"
+        description = "To access classes through the SuperAccessTransformer Mod."
+        url = "https://github.com/yiyuyan/SuperAccessTransformer"
+        licenses {
+            license {
+                name = 'MIT'
+                url = 'https://mit-license.org/'
+                distribution = 'https://mit-license.org/'
+            }
+        }
+        developers {
+            developer {
+                id = 'yiyuyan'
+                name = 'commonplace'
+                url = "https://github.com/yiyuyan/"
+                email = "179544143@qq.com"
+            }
+        }
+        scm {
+            url = 'https://github.com/yiyuyan/SuperAccessTransformer'
+            connection = 'scm:git:https://github.com/yiyuyan/SuperAccessTransformer.git'
+            developerConnection = 'scm:git:git@github.com:yiyuyan/SuperAccessTransformer.git'
+        }
+    }
 }
 
 test {

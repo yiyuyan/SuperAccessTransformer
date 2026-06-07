@@ -19,7 +19,7 @@ public abstract class AccessExtension {
 
     public void packageName(String pkg) {
         if (!pkg.endsWith("/")) pkg += "/";
-        getPackages().add(pkg);
+        getPackages().add(pkg.replace(".","/"));
     }
 
     public void skip(String rule) {
