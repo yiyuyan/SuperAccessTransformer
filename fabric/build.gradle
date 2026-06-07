@@ -1,8 +1,13 @@
+buildscript {
+    dependencies {
+        classpath 'io.github.yiyuyan:SuperAccessTransformerPlugin:1.000'
+    }
+}
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
-    id 'sat-plugin' version '1.000'
 }
+apply plugin: 'io.github.yiyuyan.sat-plugin'
 base {
     archivesBaseName = mod_name+"-Fabric"
 }

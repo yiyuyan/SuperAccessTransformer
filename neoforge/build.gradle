@@ -1,11 +1,16 @@
+buildscript {
+    dependencies {
+        classpath 'io.github.yiyuyan:SuperAccessTransformerPlugin:1.000'
+    }
+}
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    id 'sat-plugin' version '1.00'
 }
 base {
     archivesBaseName = mod_name+"-NeoForge"
 }
+apply plugin: 'io.github.yiyuyan.sat-plugin'
 
 superAccessTransformer {
     //skip()
