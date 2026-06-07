@@ -1,7 +1,13 @@
+buildscript {
+    dependencies {
+        classpath 'io.github.yiyuyan:SuperAccessTransformerPlugin:1.000'
+    }
+}
 plugins {
     id 'com.github.johnrengelman.shadow'
-    id 'sat-plugin' version '1.000'
 }
+
+apply plugin: 'io.github.yiyuyan.sat-plugin'
 
 architectury {
     platformSetupLoomIde()
@@ -43,8 +49,6 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
-
-    modImplementation(files("SuperAccessTransformer-1.0.jar"))
 }
 
 processResources {
