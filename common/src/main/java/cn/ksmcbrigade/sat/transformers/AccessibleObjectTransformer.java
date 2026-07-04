@@ -12,9 +12,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
-        if (!"java/lang/reflect/AccessibleObject".equals(className)) {
-            return null;
-        }
+        if (!"java/lang/reflect/AccessibleObject".equals(className)) return null;
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
