@@ -9,7 +9,7 @@ plugins {
 }
 apply plugin: 'io.github.yiyuyan.sat-plugin'
 base {
-    archivesBaseName = mod_name
+    archivesBaseName = mod_name+"-Fabric"
 }
 repositories {
     mavenLocal()
