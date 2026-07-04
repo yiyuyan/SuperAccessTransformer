@@ -1,6 +1,8 @@
 package cn.ksmcbrigade.sat;
 
 import cn.ksmcbrigade.sat.transformers.*;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.lang.instrument.Instrumentation;
@@ -8,6 +10,8 @@ import java.lang.instrument.UnmodifiableClassException;
 import java.util.*;
 
 public class AccessAgent {
+
+    public static Logger LOGGER = LogUtils.getLogger();
 
     public static void attachSelf(boolean dev,boolean fabricDev){
         if(!dev){
@@ -32,6 +36,8 @@ public class AccessAgent {
         instrumentation.retransformClasses(Class.forName("jdk.internal.reflect.MethodHandleFieldAccessorImpl"));
 
         ModuleUtils.openAllModules();
+
+        LOGGER.info("{} Loaded.",AccessAgent.class.getSimpleName());
     }
 
     public static void agentmain(String arg,Instrumentation instrumentation) throws ClassNotFoundException, UnmodifiableClassException {
