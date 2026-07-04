@@ -39,9 +39,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
                         }
 
                         @Override
-                        public void visitMaxs(int maxStack, int maxLocals) {
-                            // COMPUTE_FRAMES 会自动计算，这里不调用原 visitMaxs
-                        }
+                        public void visitMaxs(int maxStack, int maxLocals) {}
 
                         @Override
                         public void visitEnd() {
