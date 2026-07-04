@@ -1,0 +1,58 @@
+package cn.ksmcbrigade.sat.transformers;
+
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+import org.objectweb.asm.*;
+
+public class AccessibleObjectTransformer implements ClassFileTransformer {
+
+    @Override
+    public byte[] transform(ClassLoader loader,
+                            String className,
+                            Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain,
+                            byte[] classfileBuffer) {
+        if (!"java/lang/reflect/AccessibleObject".equals(className)) {
+            return null;
+        }
+
+        ClassReader cr = new ClassReader(classfileBuffer);
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
+        ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+            @Override
+            public MethodVisitor visitMethod(int access,
+                                             String name,
+                                             String descriptor,
+                                             String signature,
+                                             String[] exceptions) {
+                MethodVisitor mv = super.visitMethod(access, name, descriptor,
+                        signature, exceptions);
+                if (name.equals("checkCanSetAccessible") &&
+                        descriptor.equals("(Ljava/lang/Class;Ljava/lang/Class;Z)Z")) {
+
+                    return new MethodVisitor(Opcodes.ASM9, mv) {
+                        @Override
+                        public void visitCode() {
+                            mv.visitCode();
+                            mv.visitInsn(Opcodes.ICONST_1);
+                            mv.visitInsn(Opcodes.IRETURN);
+                        }
+
+                        @Override
+                        public void visitMaxs(int maxStack, int maxLocals) {
+                            // COMPUTE_FRAMES 会自动计算，这里不调用原 visitMaxs
+                        }
+
+                        @Override
+                        public void visitEnd() {
+                            mv.visitEnd();
+                        }
+                    };
+                }
+                return mv;
+            }
+        };
+        cr.accept(cv, ClassReader.SKIP_FRAMES);
+        return cw.toByteArray();
+    }
+}

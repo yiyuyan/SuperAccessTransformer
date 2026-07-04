@@ -1,7 +1,10 @@
 package cn.ksmcbrigade.sat;
 
+import cn.ksmcbrigade.sat.transformers.*;
+
 import java.io.File;
 import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 import java.util.*;
 
 public class AccessAgent {
@@ -13,15 +16,25 @@ public class AccessAgent {
         else{
             File file = new File(System.getProperty("user.dir")).getParentFile();
             if(fabricDev) file = file.getParentFile();
-            AccessUnsafeUtils.loadAgent(file.toPath().resolve("build/libs/SuperAccessTransformer-1.0.jar").toFile().getAbsolutePath());
+            AccessUnsafeUtils.loadAgent(file.toPath().resolve("build/libs/SuperAccessTransformer-1.1.0.jar").toFile().getAbsolutePath());
         }
     }
 
-    public static void premain(String arg, Instrumentation instrumentation) {
-        instrumentation.addTransformer(new AccessTransformer(),true);
+    public static void premain(String arg, Instrumentation instrumentation) throws ClassNotFoundException, UnmodifiableClassException {
+        instrumentation.addTransformer(new AccessTransformer(),false);
+
+        instrumentation.addTransformer(new ReflectionTransformer(),true);
+        instrumentation.addTransformer(new AccessibleObjectTransformer(),true);
+        instrumentation.addTransformer(new MethodHandleFieldAccessorImplTransformer(),true);
+
+        instrumentation.retransformClasses(Class.forName("jdk.internal.reflect.Reflection"));
+        instrumentation.retransformClasses(Class.forName("java.lang.reflect.AccessibleObject"));
+        instrumentation.retransformClasses(Class.forName("jdk.internal.reflect.MethodHandleFieldAccessorImpl"));
+
+        ModuleUtils.openAllModules();
     }
 
-    public static void agentmain(String arg,Instrumentation instrumentation){
+    public static void agentmain(String arg,Instrumentation instrumentation) throws ClassNotFoundException, UnmodifiableClassException {
         premain(arg,instrumentation);
     }
 }

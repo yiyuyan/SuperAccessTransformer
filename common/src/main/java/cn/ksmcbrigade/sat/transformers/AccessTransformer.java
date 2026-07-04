@@ -1,4 +1,4 @@
-package cn.ksmcbrigade.sat;
+package cn.ksmcbrigade.sat.transformers;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -15,16 +15,25 @@ import static java.lang.reflect.Modifier.*;
 public class AccessTransformer implements ClassFileTransformer {
     private static boolean loaded;
 
+    public static final String[] EXCLUDED_PACKAGES = {
+            "com/sun/jna/",
+            "oshi/",
+    };
+
     public AccessTransformer() {
         System.out.println("Constructing SuperAccessTransformer.");
     }
 
     @Override
-    public byte[] transform(ClassLoader classLoader, String s, Class<?> aClass, ProtectionDomain protectionDomain, byte[] bytes) {
+    public byte[] transform(ClassLoader classLoader, String s, Class<?> aClass,
+                            ProtectionDomain protectionDomain, byte[] bytes) {
         if (!loaded) {
             loaded = true;
             System.out.println("SuperAccessTransformer is running.");
         }
+
+        if (shouldExclude(s)) return bytes;
+
         try {
             ClassReader cr = new ClassReader(bytes);
             ClassNode cn = new ClassNode();
@@ -46,7 +55,6 @@ public class AccessTransformer implements ClassFileTransformer {
                 if (isFinal(fn.access)) {
                     fn.access &= ~Opcodes.ACC_FINAL;
                 }
-
             }
 
             for (MethodNode mn : cn.methods) {
@@ -74,4 +82,11 @@ public class AccessTransformer implements ClassFileTransformer {
         }
     }
 
+    private boolean shouldExclude(String className) {
+        if (className == null) return false;
+        for (String prefix : EXCLUDED_PACKAGES) {
+            if (className.startsWith(prefix)) return true;
+        }
+        return false;
+    }
 }

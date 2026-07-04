@@ -8,7 +8,7 @@ plugins {
     id 'net.neoforged.moddev'
 }
 base {
-    archivesBaseName = mod_name+"-NeoForge"
+    archivesBaseName = mod_name
 }
 apply plugin: 'io.github.yiyuyan.sat-plugin'
 
