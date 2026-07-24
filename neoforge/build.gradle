@@ -6,9 +6,8 @@ buildscript {
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    id 'io.github.yiyuyan.sat-plugin' version '1.001'
 }
-//apply plugin: 'io.github.yiyuyan.sat-plugin'
+apply plugin: 'io.github.yiyuyan.sat-plugin'
 base {
     archivesName = mod_name
 }
