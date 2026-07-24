@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'io.github.yiyuyan'
-version = '1.001'
+version = '1.003'
 
 base{
     archivesName = "SuperAccessTransformerPlugin"

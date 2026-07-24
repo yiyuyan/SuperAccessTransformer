@@ -17,17 +17,19 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 
 public abstract class AccessAction implements TransformAction<AccessAction.Params> {
 
     public interface Params extends TransformParameters {
         @Input
         ListProperty<String> getTargetPackages();
-
         @Input
         ListProperty<String> getSkipMethods();
     }
@@ -44,14 +46,13 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
         try (JarInputStream jis = new JarInputStream(new FileInputStream(inputJar))) {
             JarEntry entry;
             while ((entry = jis.getNextJarEntry()) != null) {
-                String name = entry.getName();
-                if (name.endsWith(".class") && isTargetPackage(name, packages)) {
+                if (entry.getName().endsWith(".class") && isTargetPackage(entry.getName(), packages)) {
                     needsTransform = true;
                     break;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to scan " + inputJar, e);
+            throw new RuntimeException("Failed to scan input jar: " + inputJar, e);
         }
 
         if (!needsTransform) {
@@ -59,30 +60,53 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
             return;
         }
 
-        String outputName = inputJar.getName().replace(".jar", "-public.jar");
-        File outputFile = outputs.file(outputName);
+        File outputFile = outputs.file(inputJar.getName().replace(".jar", "-public.jar"));
+        File tempFile = new File(outputFile.getParentFile(), outputFile.getName() + ".tmp");
 
-        try (JarInputStream jis = new JarInputStream(new FileInputStream(inputJar));
-             JarOutputStream jos = new JarOutputStream(new FileOutputStream(outputFile))) {
-
-            JarEntry entry;
-            while ((entry = jis.getNextJarEntry()) != null) {
-                String name = entry.getName();
-                byte[] data = jis.readAllBytes();
-
-                if (name.endsWith(".class") && isTargetPackage(name, packages)) {
-                    try {
-                        data = transformClass(data, getParameters().getSkipMethods().get());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                jos.putNextEntry(new JarEntry(name));
-                jos.write(data);
-                jos.closeEntry();
+        try {
+            Manifest manifest;
+            try (JarInputStream jis = new JarInputStream(new FileInputStream(inputJar))) {
+                manifest = jis.getManifest();
             }
-        } catch (IOException e) {
+
+            try (JarInputStream jis = new JarInputStream(new FileInputStream(inputJar));
+                 JarOutputStream jos = manifest != null
+                         ? new JarOutputStream(new FileOutputStream(tempFile), manifest)
+                         : new JarOutputStream(new FileOutputStream(tempFile))) {
+
+                JarEntry entry;
+                while ((entry = jis.getNextJarEntry()) != null) {
+                    String name = entry.getName();
+                    if (name.startsWith("META-INF/") &&
+                            (name.endsWith(".SF") || name.endsWith(".RSA") ||
+                                    name.endsWith(".DSA") || name.endsWith(".EC"))) {
+                        continue;
+                    }
+
+                    byte[] data = jis.readAllBytes();
+                    if (name.endsWith(".class") && isTargetPackage(name, packages)) {
+                        try {
+                            data = transformClass(data, getParameters().getSkipMethods().get());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    JarEntry newEntry = new JarEntry(name);
+                    newEntry.setTime(entry.getTime());
+                    jos.putNextEntry(newEntry);
+                    jos.write(data);
+                    jos.closeEntry();
+                }
+                jos.finish();
+            }
+
+            Files.move(tempFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            try {
+                Files.deleteIfExists(tempFile.toPath());
+                Files.deleteIfExists(outputFile.toPath());
+            } catch (IOException ignored) {}
             throw new RuntimeException("Failed to transform " + inputJar, e);
         }
     }
@@ -129,7 +153,7 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
             } else if ((fn.access & Opcodes.ACC_PROTECTED) != 0) {
                 fn.access = (fn.access & ~Opcodes.ACC_PROTECTED) | Opcodes.ACC_PUBLIC;
                 fChanged = true;
-            } else if ((fn.access & (Opcodes.ACC_PUBLIC)) == 0) {
+            } else if ((fn.access & Opcodes.ACC_PUBLIC) == 0) {
                 fn.access |= Opcodes.ACC_PUBLIC;
                 fChanged = true;
             }
@@ -142,8 +166,7 @@ public abstract class AccessAction implements TransformAction<AccessAction.Param
 
         for (MethodNode mn : cn.methods) {
             if ("<clinit>".equals(mn.name) || mn.name.startsWith("handler$")) continue;
-
-            if("rotlerp".equals(mn.name) && (cn.name.endsWith("Mob") || cn.name.endsWith("WitherBoss"))) continue;
+            if ("rotlerp".equals(mn.name) && (cn.name.endsWith("Mob") || cn.name.endsWith("WitherBoss"))) continue;
             if (shouldSkip(skipRules, cn.name, mn.name)) continue;
 
             boolean mChanged = false;
