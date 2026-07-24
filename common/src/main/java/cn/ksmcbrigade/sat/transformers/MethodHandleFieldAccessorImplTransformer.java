@@ -18,7 +18,7 @@ public class MethodHandleFieldAccessorImplTransformer implements ClassFileTransf
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -28,7 +28,7 @@ public class MethodHandleFieldAccessorImplTransformer implements ClassFileTransf
                 MethodVisitor mv = super.visitMethod(access, name, descriptor,
                         signature, exceptions);
                 if (name.equals("isReadOnly") && descriptor.equals("()Z")) {
-                    return new MethodVisitor(Opcodes.ASM9, mv) {
+                    return new MethodVisitor(Opcodes.ASM10_EXPERIMENTAL, mv) {
                         @Override
                         public void visitCode() {
                             mv.visitCode();

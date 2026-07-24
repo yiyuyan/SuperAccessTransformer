@@ -18,7 +18,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -59,7 +59,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
         private final boolean value;
 
         ReturnConstantMethodVisitor(MethodVisitor mv, boolean value) {
-            super(Opcodes.ASM9, mv);
+            super(Opcodes.ASM10_EXPERIMENTAL, mv);
             this.value = value;
         }
 
@@ -81,7 +81,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
 
     private static class NoFilterMethodVisitor extends MethodVisitor {
         NoFilterMethodVisitor(MethodVisitor mv) {
-            super(Opcodes.ASM9, mv);
+            super(Opcodes.ASM10_EXPERIMENTAL, mv);
         }
 
         @Override

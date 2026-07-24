@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.nio.charset.Charset;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.reflect.Modifier.*;
@@ -22,7 +23,7 @@ import static java.lang.reflect.Modifier.*;
 public class AccessTransformer implements ClassFileTransformer {
     private static boolean loaded;
 
-    public static List<String> EXCLUDED_PACKAGES;
+    public static List<String> EXCLUDED_PACKAGES = new ArrayList<>();
 
     public AccessTransformer() {
         AccessAgent.LOGGER.info("Constructing SuperAccessTransformer.");
@@ -39,7 +40,7 @@ public class AccessTransformer implements ClassFileTransformer {
         }
         try {
             JsonArray array = JsonParser.parseString(FileUtils.readFileToString(file,Charset.defaultCharset())).getAsJsonArray();
-            EXCLUDED_PACKAGES = array.asList().stream().map(JsonElement::getAsString).toList();
+            EXCLUDED_PACKAGES.addAll(array.asList().stream().map(JsonElement::getAsString).toList());
         } catch (IOException e) {
             AccessAgent.LOGGER.error("Failed to parse configs.",e);
             AccessAgent.LOGGER.info("Using default config...");

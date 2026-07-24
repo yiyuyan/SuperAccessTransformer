@@ -16,7 +16,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -28,7 +28,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
                 if (name.equals("checkCanSetAccessible") &&
                         descriptor.equals("(Ljava/lang/Class;Ljava/lang/Class;Z)Z")) {
 
-                    return new MethodVisitor(Opcodes.ASM9, mv) {
+                    return new MethodVisitor(Opcodes.ASM10_EXPERIMENTAL, mv) {
                         @Override
                         public void visitCode() {
                             mv.visitCode();

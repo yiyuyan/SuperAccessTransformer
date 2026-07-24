@@ -20,7 +20,7 @@ public class AccessAgent {
         else{
             File file = new File(System.getProperty("user.dir")).getParentFile();
             if(fabricDev) file = file.getParentFile();
-            AccessUnsafeUtils.loadAgent(file.toPath().resolve("build/libs/SuperAccessTransformer-1.1.0.jar").toFile().getAbsolutePath());
+            AccessUnsafeUtils.loadAgent(file.toPath().resolve("build/libs/SuperAccessTransformer-1.1.1.jar").toFile().getAbsolutePath());
         }
     }
 
