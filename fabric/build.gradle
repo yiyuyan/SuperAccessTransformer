@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath 'io.github.yiyuyan:SuperAccessTransformerPlugin:1.001'
+        classpath 'io.github.yiyuyan:SuperAccessTransformerPlugin:1.003'
     }
 }
 plugins {

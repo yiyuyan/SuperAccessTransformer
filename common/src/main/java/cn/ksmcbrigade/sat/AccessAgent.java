@@ -1,6 +1,7 @@
 package cn.ksmcbrigade.sat;
 
 import cn.ksmcbrigade.sat.transformers.*;
+import cn.ksmcbrigade.sat.transformers.neoforged.ReplaceFieldWithGetterAccessTransformer;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
@@ -13,7 +14,8 @@ public class AccessAgent {
 
     public static Logger LOGGER = LogUtils.getLogger();
 
-    public static void attachSelf(boolean dev,boolean fabricDev){
+    public static void attachSelf(boolean dev,boolean fabricDev,boolean neoforged){
+        System.getProperties().put("env.neoforged",neoforged);
         if(!dev){
             AccessUnsafeUtils.loadAgent(AccessUnsafeUtils.getJarPath(AccessAgent.class));
         }
@@ -30,6 +32,10 @@ public class AccessAgent {
         instrumentation.addTransformer(new ReflectionTransformer(),true);
         instrumentation.addTransformer(new AccessibleObjectTransformer(),true);
         instrumentation.addTransformer(new MethodHandleFieldAccessorImplTransformer(),true);
+
+        if((boolean) System.getProperties().getOrDefault("env.neoforged",false)){
+            instrumentation.addTransformer(new ReplaceFieldWithGetterAccessTransformer(),true);
+        }
 
         instrumentation.retransformClasses(Class.forName("jdk.internal.reflect.Reflection"));
         instrumentation.retransformClasses(Class.forName("java.lang.reflect.AccessibleObject"));

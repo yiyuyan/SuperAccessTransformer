@@ -7,6 +7,6 @@ public class SATMod implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
-        AccessAgent.attachSelf(FabricLoader.getInstance().isDevelopmentEnvironment(),true);
+        AccessAgent.attachSelf(FabricLoader.getInstance().isDevelopmentEnvironment(),true,false);
     }
 }
