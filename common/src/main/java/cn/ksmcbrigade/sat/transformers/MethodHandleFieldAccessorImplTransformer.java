@@ -2,6 +2,8 @@ package cn.ksmcbrigade.sat.transformers;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+
+import cn.ksmcbrigade.sat.AccessAgent;
 import org.objectweb.asm.*;
 
 public class MethodHandleFieldAccessorImplTransformer implements ClassFileTransformer {
@@ -18,7 +20,7 @@ public class MethodHandleFieldAccessorImplTransformer implements ClassFileTransf
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
+        ClassVisitor cv = new ClassVisitor(AccessAgent.getASMAPIVersion(), cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -28,7 +30,7 @@ public class MethodHandleFieldAccessorImplTransformer implements ClassFileTransf
                 MethodVisitor mv = super.visitMethod(access, name, descriptor,
                         signature, exceptions);
                 if (name.equals("isReadOnly") && descriptor.equals("()Z")) {
-                    return new MethodVisitor(Opcodes.ASM10_EXPERIMENTAL, mv) {
+                    return new MethodVisitor(AccessAgent.getASMAPIVersion(), mv) {
                         @Override
                         public void visitCode() {
                             mv.visitCode();

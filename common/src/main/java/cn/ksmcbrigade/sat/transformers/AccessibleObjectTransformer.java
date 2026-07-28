@@ -2,6 +2,8 @@ package cn.ksmcbrigade.sat.transformers;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+
+import cn.ksmcbrigade.sat.AccessAgent;
 import org.objectweb.asm.*;
 
 public class AccessibleObjectTransformer implements ClassFileTransformer {
@@ -16,7 +18,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
+        ClassVisitor cv = new ClassVisitor(AccessAgent.getASMAPIVersion(), cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -28,7 +30,7 @@ public class AccessibleObjectTransformer implements ClassFileTransformer {
                 if (name.equals("checkCanSetAccessible") &&
                         descriptor.equals("(Ljava/lang/Class;Ljava/lang/Class;Z)Z")) {
 
-                    return new MethodVisitor(Opcodes.ASM10_EXPERIMENTAL, mv) {
+                    return new MethodVisitor(AccessAgent.getASMAPIVersion(), mv) {
                         @Override
                         public void visitCode() {
                             mv.visitCode();

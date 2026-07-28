@@ -2,6 +2,8 @@ package cn.ksmcbrigade.sat.transformers;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+
+import cn.ksmcbrigade.sat.AccessAgent;
 import org.objectweb.asm.*;
 
 public class ReflectionTransformer implements ClassFileTransformer {
@@ -18,7 +20,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
 
         ClassReader cr = new ClassReader(classfileBuffer);
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor cv = new ClassVisitor(Opcodes.ASM10_EXPERIMENTAL, cw) {
+        ClassVisitor cv = new ClassVisitor(AccessAgent.getASMAPIVersion(), cw) {
             @Override
             public MethodVisitor visitMethod(int access,
                                              String name,
@@ -59,7 +61,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
         private final boolean value;
 
         ReturnConstantMethodVisitor(MethodVisitor mv, boolean value) {
-            super(Opcodes.ASM10_EXPERIMENTAL, mv);
+            super(AccessAgent.getASMAPIVersion(), mv);
             this.value = value;
         }
 
@@ -81,7 +83,7 @@ public class ReflectionTransformer implements ClassFileTransformer {
 
     private static class NoFilterMethodVisitor extends MethodVisitor {
         NoFilterMethodVisitor(MethodVisitor mv) {
-            super(Opcodes.ASM10_EXPERIMENTAL, mv);
+            super(AccessAgent.getASMAPIVersion(), mv);
         }
 
         @Override

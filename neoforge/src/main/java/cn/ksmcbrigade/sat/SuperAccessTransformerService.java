@@ -10,10 +10,9 @@ public class SuperAccessTransformerService implements IModFileCandidateLocator {
 
     static {
         try {
-
-            AccessAgent.attachSelf(!FMLLoader.getCurrent().isProduction(),true,true);
+            AccessAgent.attachSelf(!FMLLoader.isProduction(),false,true);
         } catch (Throwable e) {
-            AccessAgent.attachSelf(false,true,true);
+            AccessAgent.attachSelf(false,false,true);
         }
     }
 
